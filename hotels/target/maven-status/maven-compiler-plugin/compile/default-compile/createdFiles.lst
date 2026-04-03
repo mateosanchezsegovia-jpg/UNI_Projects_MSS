@@ -1,0 +1,10 @@
+paa/reservas/persistence/DAOException.class
+paa/reservas/model/Booking.class
+paa/reservas/business/BookingService.class
+paa/reservas/business/BookingServiceException.class
+paa/reservas/model/Hotel.class
+paa/reservas/persistence/HotelJPADAO.class
+paa/reservas/business/JPABookingService.class
+paa/reservas/persistence/JPADAO.class
+paa/reservas/persistence/BookingJPADAO.class
+paa/reservas/persistence/DAO.class

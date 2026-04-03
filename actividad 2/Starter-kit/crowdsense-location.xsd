@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:cs="http://upm.es/piat/crowdsense"
+           targetNamespace="http://upm.es/piat/crowdsense"
+           elementFormDefault="qualified">
+
+    <!-- ============================================== -->
+    <!-- CROWDSENSE LOCATION - Modelo de ubicación      -->
+    <!-- Autor: Proyecto CrowdSense UPM                 -->
+    <!-- Versión: 1.0                                   -->
+    <!-- ============================================== -->
+
+    <xs:include schemaLocation="./crowdsense-types.xsd"/>
+
+    
+    <!-- ========== TIPO COMPLEJO: LocationIDType (Básico) ========== -->
+    <!-- Completar con lo desarrollado en el ejercicio 2 -->
+    <!-- 
+        Representa la ubicación desglosada de una sonda o detección.
+        Estructura jerárquica: Edificio > Bloque > Planta > Sala
+        Ejemplo: UPM-N-10.B1.P0.L01
+        
+        Elementos: edificio, bloque, planta, sala
+        Atributos opcionales: lat, lon (coordenadas GPS)
+    -->
+    <xs:complexType name="LocationIDType">
+        <!-- TU CÓDIGO AQUÍ -->
+            <xs:sequence>
+                <xs:element name="edificio" type="cs:EdificioType"/>
+                <xs:element name="bloque" type="cs:BloqueType"/>
+                <xs:element name="planta" type="cs:PlantaType"/>
+                <xs:element name="sala" type="cs:SalaType"/>
+            </xs:sequence>
+            <xs:attribute name="lat" type="cs:LatitudType" use="optional"/>
+            <xs:attribute name="lon" type="cs:LongitudType" use="optional"/>
+    </xs:complexType>
+    <!-- ========== TIPO COMPLEJO: LocationFullType (Extendido) ========== -->
+    <!-- Completar con lo desarrollado en el ejercicio 2 -->
+    <!-- 
+        Ubicación con metadatos adicionales para el catálogo de espacios.
+        Extiende LocationIDType con información descriptiva.
+        
+        Elementos adicionales: descripcion, capacidad, tipoEspacio, superficie, equipamiento
+        Atributo adicional: activo (boolean, default true)
+    -->
+
+    <xs:complexType name="LocationFullType">
+        <!-- TU CÓDIGO AQUÍ -->
+        <xs:complexContent>
+            <xs:extension base="cs:LocationIDType">
+                <xs:sequence>
+                    <xs:element name="descripcion" type="xs:string" minOccurs="0"/>
+                    <xs:element name="capacidad" type="xs:positiveInteger" minOccurs="0"/>
+                    <xs:element name="tipoEspacio" type="cs:TipoEspacioType" minOccurs="0"/>
+                    <xs:element name="superficie" type="cs:SuperficieType" minOccurs="0"/>
+                    <xs:element name="equipamiento" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="item" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="activo" type="xs:boolean" default="true"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ========== Elemento reutilizable: location ========== -->
+    <xs:element name="location" type="cs:LocationIDType">
+        <xs:annotation>
+            <xs:documentation>Elemento de ubicación básica reutilizable</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="ubicacionCompleta" type="cs:LocationFullType">
+        <xs:annotation>
+            <xs:documentation>Elemento de ubicación extendida reutilizable</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+</xs:schema>

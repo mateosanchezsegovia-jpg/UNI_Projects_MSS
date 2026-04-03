@@ -1,0 +1,10 @@
+/Users/mateosanchezsegovia/eclipse-workspace/hotels/src/main/java/paa/reservas/business/JPABookingService.java
+/Users/mateosanchezsegovia/eclipse-workspace/hotels/src/main/java/paa/reservas/persistence/JPADAO.java
+/Users/mateosanchezsegovia/eclipse-workspace/hotels/src/main/java/paa/reservas/persistence/DAOException.java
+/Users/mateosanchezsegovia/eclipse-workspace/hotels/src/main/java/paa/reservas/business/BookingService.java
+/Users/mateosanchezsegovia/eclipse-workspace/hotels/src/main/java/paa/reservas/persistence/DAO.java
+/Users/mateosanchezsegovia/eclipse-workspace/hotels/src/main/java/paa/reservas/persistence/BookingJPADAO.java
+/Users/mateosanchezsegovia/eclipse-workspace/hotels/src/main/java/paa/reservas/business/BookingServiceException.java
+/Users/mateosanchezsegovia/eclipse-workspace/hotels/src/main/java/paa/reservas/model/Booking.java
+/Users/mateosanchezsegovia/eclipse-workspace/hotels/src/main/java/paa/reservas/persistence/HotelJPADAO.java
+/Users/mateosanchezsegovia/eclipse-workspace/hotels/src/main/java/paa/reservas/model/Hotel.java

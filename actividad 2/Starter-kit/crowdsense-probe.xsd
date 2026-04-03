@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:cs="http://upm.es/piat/crowdsense"
+           targetNamespace="http://upm.es/piat/crowdsense"
+           elementFormDefault="qualified">
+
+    <!-- ============================================== -->
+    <!-- CROWDSENSE PROBE - Modelo de WifiProbe         -->
+    <!-- Autor: Proyecto CrowdSense UPM                 -->
+    <!-- Versión: 1.0                                   -->
+    <!-- ============================================== -->
+
+    <xs:include schemaLocation="./crowdsense-types.xsd"/>
+    <xs:include schemaLocation="./crowdsense-location.xsd"/>
+
+    <!-- ========== TIPO COMPLEJO: WifiProbeType ========== -->
+    <!-- Completar con lo desarrollado en el ejercicio 3 -->
+    <!-- 
+        Representa una trama WiFi capturada (probe request/response).
+        Objeto inmutable con todos los datos de una detección individual.
+        
+        CONCEPTO CLAVE: Cada probe está asociado a una sonda específica 
+        mediante sondaRef (referencia ligera, no duplica datos).
+        
+        Elementos: timestamp, location, rssi, macAddress, ssid, 
+                   canal?, frecuencia?, tipoTrama?, fabricante?
+        Atributos: id (required), sondaRef (required), secuencia (optional)
+    -->
+    <xs:complexType name="WifiProbeType">
+        <!-- TU CÓDIGO AQUÍ -->
+          <xs:sequence>
+            <xs:element name="timestamp" type="xs:dateTime"/>
+            <xs:element name="location" type="cs:LocationIDType"/>
+            <xs:element name="rssi" type="cs:RssiType"/>
+            <xs:element name="macAddress" type="cs:MacAddressType"/>
+            <xs:element name="ssid" type="cs:SsidType"/>
+            <xs:element name="canal" type="cs:CanalWifiType" minOccurs="0"/>
+            <xs:element name="frecuencia" type="cs:FrecuenciaWifiType" minOccurs="0"/>
+            <xs:element name="tipoTrama" minOccurs="0">
+                <xs:simpleType> 
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="PROBE_REQUEST"/>
+                        <xs:enumeration value="PROBE_RESPONSE"/>
+                        <xs:enumeration value="BEACON"/>
+                        <xs:enumeration value="DATA"/>
+                        <xs:enumeration value="OTHER"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="fabricante" type="xs:string" minOccurs="0"/>
+          </xs:sequence>
+            <xs:attribute name="id" type="cs:UuidType" use="required"/>
+            <xs:attribute name="sondaRef" type="cs:UuidType" use="required"/>
+            <xs:attribute name="secuencia" type="xs:positiveInteger" use="optional"/>
+    </xs:complexType>
+    <!-- ========== TIPO COMPLEJO: WifiProbesBatchType ========== -->
+    <!-- Completar con lo desarrollado en el ejercicio 3 -->
+    <!-- 
+        Contenedor para transmisión de múltiples probes en lotes.
+        Optimizado para envío eficiente de grandes volúmenes de datos.
+        
+        Elementos: probe (1..unbounded)
+        Atributos: batchId, batchTimestamp, totalProbes (required)
+                   sondaOrigen (optional)
+    -->
+
+    <xs:complexType name="WifiProbesBatchType">
+        <xs:sequence>
+            <xs:element name="probe" type="cs:WifiProbeType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="batchId" type="cs:UuidType" use="required"/>
+        <xs:attribute name="batchTimestamp" type="xs:dateTime" use="required"/>
+        <xs:attribute name="totalProbes" type="xs:positiveInteger" use="required"/>
+        <xs:attribute name="sondaOrigen" type="cs:UuidType" use="optional"/>
+    </xs:complexType>
+    <!-- ========== Elemento raíz para lotes independientes ========== -->
+    <xs:element name="wifiProbesBatch" type="cs:WifiProbesBatchType">
+        <xs:annotation>
+            <xs:documentation>
+                Elemento raíz para documentos XML que contienen solo lotes de probes.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+</xs:schema>

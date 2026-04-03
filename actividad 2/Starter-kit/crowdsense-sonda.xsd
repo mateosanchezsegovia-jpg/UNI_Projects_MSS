@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:cs="http://upm.es/piat/crowdsense"
+           targetNamespace="http://upm.es/piat/crowdsense"
+           elementFormDefault="qualified">
+
+    <!-- ============================================== -->
+    <!-- CROWDSENSE SONDA - Modelo de Sensor            -->
+    <!-- Autor: Proyecto CrowdSense UPM                 -->
+    <!-- Versión: 1.0                                   -->
+    <!-- ============================================== -->
+
+    <xs:include schemaLocation="./crowdsense-types.xsd"/>
+    <xs:include schemaLocation="./crowdsense-location.xsd"/>
+    <xs:include schemaLocation="./crowdsense-probe.xsd"/>
+
+    <!-- ========== TIPO COMPLEJO: SondaConfigType ========== -->
+    <!-- Completar con lo desarrollado en el ejercicio 3 -->
+    <!-- 
+        Configuración operativa de una sonda de captura WiFi.
+        Define parámetros de captura, filtros y comportamiento.
+        
+        Elementos: intervaloCaptura, rssiMinimo, canalesMonitorizados,
+                   filtroSSID?, modoCaptura?, tamanoLote?
+    -->
+    <xs:complexType name="SondaConfigType">
+        <!-- TU CÓDIGO AQUÍ -->
+        <xs:sequence>
+            <xs:element name="intervaloCaptura" type="cs:IntervaloCapturaType" default="1000"/>
+            <xs:element name="rssiMinimo" type="cs:RssiType" default="-90"/>
+            <xs:element name="canalesMonitorizados">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="canal" type="cs:CanalWifiType" minOccurs="1" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="filtroSSID" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="ssidIncluir" type="cs:SsidType" minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:element name="ssidExcluir" type="cs:SsidType" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                    <xs:attribute name="modo" default="INCLUIR">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="INCLUIR"/>
+                                <xs:enumeration value="EXCLUIR"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>            
+            <xs:element name="modoCaptura" type="cs:ModoCapturaType" minOccurs="0" default="CONTINUO"/>
+            <xs:element name="tamanoLote" type="xs:positiveInteger" minOccurs="0" default="100"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ========== TIPO COMPLEJO: SondaType ========== -->
+    <!-- Completar con lo desarrollado en el ejercicio 4 -->
+    <!-- 
+        Representa una sonda/sensor de captura WiFi.
+        Cada sonda tiene una ubicación fija y puede capturar miles de probes.
+        Las sondas se agrupan en campañas de medición.
+        
+        Elementos:
+          * nombre (xs:string) - Nombre identificativo
+          * descripcion (xs:string) - minOccurs="0"
+          * ubicacionFija (cs:LocationFullType) - Ubicación física
+          * macSonda (cs:MacAddressType) - MAC del dispositivo sonda
+          * fechaInstalacion (xs:date) - Fecha de instalación
+          * ultimoContacto (xs:dateTime) - minOccurs="0"
+          * configuracion (cs:SondaConfigType) - minOccurs="0"
+          * estadisticasSonda - minOccurs="0", tipo complejo anónimo con:
+              - totalProbesCapturados (xs:nonNegativeInteger)
+              - dispositivosUnicos (xs:nonNegativeInteger)
+              - rssiPromedio (xs:decimal)
+              - ultimaActualizacion (xs:dateTime)
+          * probes - minOccurs="0", tipo complejo anónimo con:
+              - probe (cs:WifiProbeType) minOccurs="0" maxOccurs="unbounded"
+              - Atributo totalCount (xs:nonNegativeInteger)
+        
+        Atributos:
+          * id (cs:UuidType) - required
+          * status (cs:SondaStatusType) - default="ACTIVE"
+          * version (xs:string) - optional
+    -->
+    <xs:complexType name="SondaType">
+        <!-- TODO: Implementar en ejercicio 4 -->
+        <xs:sequence>
+            <xs:element name="nombre" type="xs:string"/>
+            <xs:element name="descripcion" type="xs:string" minOccurs="0"/>
+            <xs:element name="ubicacionFija" type="cs:LocationFullType"/>
+            <xs:element name="macSonda" type="cs:MacAddressType"/>
+            <xs:element name="fechaInstalacion" type="xs:date"/>
+            <xs:element name="ultimoContacto" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="configuracion" type="cs:SondaConfigType" minOccurs="0"/>
+            <xs:element name="estadisticasSonda" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="totalProbesCapturados" type="xs:nonNegativeInteger"/>
+                        <xs:element name="dispositivosUnicos" type="xs:nonNegativeInteger"/>
+                        <xs:element name="rssiPromedio" type="xs:decimal"/>
+                        <xs:element name="ultimaActualizacion" type="xs:dateTime"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="probes" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="probe" type="cs:WifiProbeType" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                    <xs:attribute name="totalCount" type="xs:nonNegativeInteger"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="cs:UuidType" use="required"/>
+        <xs:attribute name="status" type="cs:SondaStatusType" default="ACTIVE"/>
+        <xs:attribute name="version" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <!-- ========== Elemento raíz para sondas independientes ========== -->
+    <xs:element name="sonda" type="cs:SondaType">
+        <xs:annotation>
+            <xs:documentation>
+                Elemento raíz para documentos XML que describen una sonda individual.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+</xs:schema>

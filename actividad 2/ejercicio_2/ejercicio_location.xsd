@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:cs="http://upm.es/piat/crowdsense"
+           targetNamespace="http://upm.es/piat/crowdsense"
+           elementFormDefault="qualified">
+
+    <!-- ============================================== -->
+    <!-- EJERCICIO 2: Herencia y Reutilización         -->
+    <!-- Modelo de ubicación con extensión             -->
+    <!-- ============================================== -->
+
+    <!-- Importamos los tipos básicos del ejercicio 1 -->
+    <!-- TODO                                         -->
+     <xs:include schemaLocation="../Starter-kit/crowdsense-types.xsd"></xs:include>
+    <!-- ============================================ -->
+
+    <!-- ========== TIPO COMPLEJO: LocationIDType (Básico) ========== -->
+    <!-- 
+        LocationIDType representa una ubicación básica con estructura jerárquica:
+        Edificio > Bloque > Planta > Sala
+        
+        Requisitos:
+        - Secuencia de 4 elementos obligatorios:
+          * edificio (tipo: cs:EdificioType)
+          * bloque (tipo: cs:BloqueType)
+          * planta (tipo: cs:PlantaType)
+          * sala (tipo: cs:SalaType)
+        - 2 atributos OPCIONALES para coordenadas GPS:
+          * lat (tipo: cs:LatitudType)
+          * lon (tipo: cs:LongitudType)
+    -->
+    <xs:complexType name="LocationIDType">
+        <!-- TU CÓDIGO AQUÍ -->
+         <xs:sequence>
+            <xs:element name="edificio" type="cs:EdificioType"/>
+            <xs:element name="bloque" type="cs:BloqueType"/>
+            <xs:element name="planta" type="cs:PlantaType"/>
+            <xs:element name="sala" type="cs:SalaType"/>
+        </xs:sequence>
+        <xs:attribute name="lat" type="cs:LatitudType" use="optional"/>
+        <xs:attribute name="lon" type="cs:LongitudType" use="optional"/>
+    </xs:complexType>
+
+    <!-- ========== TIPO COMPLEJO: LocationFullType (Extendido) ========== -->
+    <!-- 
+        LocationFullType EXTIENDE LocationIDType añadiendo metadatos.
+        
+        Usa xs:complexContent y xs:extension para heredar de LocationIDType.
+        
+        Elementos adicionales (todos OPCIONALES, minOccurs="0"):
+          * descripcion (tipo: xs:string) - Descripción legible del espacio
+          * capacidad (tipo: xs:positiveInteger) - Capacidad máxima de personas
+          * tipoEspacio (tipo: cs:TipoEspacioType) - Clasificación del espacio
+          * superficie (tipo: cs:SuperficieType) - Metros cuadrados
+          * equipamiento - Tipo complejo anónimo con secuencia de elementos "item" (xs:string)
+        
+        Atributo adicional:
+          * activo (tipo: xs:boolean, valor por defecto: true)
+        
+        IMPORTANTE: La sintaxis de extensión es:
+        <xs:complexContent>
+            <xs:extension base="cs:TipoBase">
+                <xs:sequence>
+                    ... elementos adicionales ...
+                </xs:sequence>
+                ... atributos adicionales ...
+            </xs:extension>
+        </xs:complexContent>
+    -->
+    <xs:complexType name="LocationFullType">
+        <!-- TU CÓDIGO AQUÍ -->
+        <xs:complexContent>
+            <xs:extension base="cs:LocationIDType">
+                <xs:sequence>
+                    <xs:element name="descripcion" type="xs:string" minOccurs="0"/>
+                    <xs:element name="capacidad" type="xs:positiveInteger" minOccurs="0"/>
+                    <xs:element name="tipoEspacio" type="cs:TipoEspacioType" minOccurs="0"/>
+                    <xs:element name="superficie" type="cs:SuperficieType" minOccurs="0"/>
+                    <xs:element name="equipamiento" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="item" type="xs:string" maxOccurs="unbounded"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="activo" type="xs:boolean" default="true"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- ========== ELEMENTOS REUTILIZABLES ========== -->
+    <!-- 
+        Define dos elementos globales:
+        - location: de tipo cs:LocationIDType
+        - ubicacionCompleta: de tipo cs:LocationFullType
+    -->
+    
+    <!-- TU CÓDIGO AQUÍ -->
+    <xs:element name="location" type="cs:LocationIDType"/>
+    <xs:element name="ubicacionCompleta" type="cs:LocationFullType"/>
+
+    <!-- ========== ESTRUCTURA DEL DOCUMENTO DE PRUEBA ========== -->
+    <!-- Esta parte ya está completada para que puedas validar tu trabajo -->
+    
+    <xs:element name="pruebaLocation">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ubicacionBasica" type="cs:LocationIDType" 
+                            minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="ubicacionCompleta" type="cs:LocationFullType" 
+                            minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

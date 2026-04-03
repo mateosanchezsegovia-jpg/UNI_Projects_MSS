@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: Completar la cabecera del XML correctamente  -->
+<!-- Relacionar este XML con el Modelo de datos         -->
+<!-- ejercicio_stypes.xsd -->
+<cs:pruebaTipos
+    xmlns:cs="http://upm.es/piat/crowdsense"   
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://upm.es/piat/crowdsense ejercicio_stypes.xsd"><!-- -->
+
+    
+<!-- Pruebas de MacAddressType -->
+    <cs:direccionesMac>
+        <cs:mac>AA:BB:CC:DD:EE:FF</cs:mac>
+        <cs:mac>00:1A:2B:3C:4D:5E</cs:mac>
+        <cs:mac>a1:b2:c3:d4:e5:f6</cs:mac>
+        <cs:mac>12:34:56:78:9A:BC</cs:mac>
+        <cs:mac>AABBCCDDEEFF</cs:mac><!--Da error por que no concuerda con el patrón -->
+        <cs:mac>AA:BB:CC:DD:99:GG</cs:mac><!--Da error por que no concuerda con el patrón -->
+    </cs:direccionesMac>
+    
+    <!-- Pruebas de RssiType -->
+    <cs:señales>
+        <cs:rssi>-45</cs:rssi>
+        <cs:rssi>-100</cs:rssi>
+        <cs:rssi>0</cs:rssi>
+        <cs:rssi>-67</cs:rssi>
+        <cs:rssi>-82</cs:rssi>
+        <cs:rssi>15</cs:rssi>
+        <cs:rssi>-150</cs:rssi>
+    </cs:señales>
+    
+    <!-- Pruebas de SsidType -->
+    <cs:redesWifi>
+        <cs:ssid>eduroam</cs:ssid>
+        <cs:ssid>BibliotecaWiFi</cs:ssid>
+        <cs:ssid>Red-Invitados_2024</cs:ssid>
+        <cs:ssid></cs:ssid>
+        <cs:ssid>EsteNombreDeRedWiFiEsDemasiadoLargoParaSerValido</cs:ssid>
+    </cs:redesWifi>
+    
+    <!-- Pruebas de SondaStatusType -->
+    <cs:estadosSonda>
+        <cs:estado>ACTIVE</cs:estado>
+        <cs:estado>inactive</cs:estado>
+        <cs:estado>INACTIVE</cs:estado>
+        <cs:estado>ERROR</cs:estado>
+        <cs:estado>MAINTENANCE</cs:estado>
+        <cs:estado>RUNNING</cs:estado>
+    </cs:estadosSonda>
+    
+</cs:pruebaTipos>

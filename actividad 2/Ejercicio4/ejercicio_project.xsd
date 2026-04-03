@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:cs="http://upm.es/piat/crowdsense"
+           targetNamespace="http://upm.es/piat/crowdsense"
+           elementFormDefault="qualified">
+
+    <!-- ============================================== -->
+    <!-- EJERCICIO 4: Composición e Integridad          -->
+    <!-- Proyecto Integrador CrowdSense                 -->
+    <!-- ============================================== -->
+
+    <!-- Importamos todos los esquemas previos -->
+    <xs:include schemaLocation="../Starter-kit/crowdsense-types.xsd"/>
+    <xs:include schemaLocation="../Starter-kit/crowdsense-location.xsd"/>
+    <xs:include schemaLocation="../Starter-kit/crowdsense-probe.xsd"/>
+    <xs:include schemaLocation="../Starter-kit/crowdsense-sonda.xsd"/>
+
+
+    <!-- ========== ELEMENTO RAÍZ CON INTEGRIDAD REFERENCIAL ========== -->
+    <!-- 
+        El elemento raíz define las restricciones de integridad:
+        - xs:key: Define claves únicas (como PRIMARY KEY en SQL)
+        - xs:keyref: Define referencias (como FOREIGN KEY en SQL)
+        
+        IMPLEMENTAR:
+        1. Elemento crowdSenseProject de tipo cs:CrowdSenseProjectType
+        
+        2. Key "sondaKey" - Garantiza que cada sonda tiene un ID único
+           - selector: .//cs:campana/cs:sondas/cs:sonda
+           - field: @id
+        
+        3. Key "campanaKey" - Garantiza que cada campaña tiene un ID único
+           - selector: cs:campanas/cs:campana
+           - field: @id
+        
+        4. Keyref "probeToSondaRef" - Garantiza que cada probe referencia una sonda existente
+           - refer: cs:sondaKey
+           - selector: .//cs:probe
+           - field: @sondaRef
+    -->
+    <xs:element name="crowdSenseProject" type="cs:CrowdSenseProjectType">
+        <!-- TU CÓDIGO AQUÍ: keys y keyrefs -->
+        <xs:annotation>
+            <xs:documentation>
+                 Elemento raíz para documentos XML que representan un proyecto completo de CrowdSense.
+                 Contiene toda la información del proyecto, incluyendo campañas, sondas y probes.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:key name ="sondaKey">
+            <xs:selector xpath=".//cs:campana/cs:sondas/cs:sonda"></xs:selector>
+            <xs:field xpath="@id"/>
+        </xs:key>
+        <xs:keyref name="probeToSondaRef" refer="cs:sondaKey">
+             <xs:annotation>
+                <xs:documentation>
+                    Garantiza que cada probe referencia una sonda existente mediante sondaRef.
+                </xs:documentation>
+            </xs:annotation>
+             <xs:selector xpath=".//cs:probe"></xs:selector>
+             <xs:field xpath="@sondaRef"/>
+        </xs:keyref>
+    </xs:element>
+
+    <!-- ========== TIPO COMPLEJO: CrowdSenseProjectType ========== -->
+    <!-- 
+        Tipo principal que representa un proyecto completo.
+        Estructura jerárquica: Proyecto > Campañas > Sondas > Probes
+        
+        Elementos (secuencia):
+          * metadata (cs:ProjectMetadataType) - Obligatorio
+          * catalogoUbicaciones - minOccurs="0", tipo complejo anónimo con:
+              - ubicacion (cs:LocationFullType) minOccurs="0" maxOccurs="unbounded"
+          * campanas - Obligatorio, tipo complejo anónimo con:
+              - campana (cs:CampanaType) minOccurs="1" maxOccurs="unbounded"
+          * estadisticas (cs:EstadisticasGlobalesType) - minOccurs="0"
+        
+        Atributos:
+          * version (xs:string) - default="1.0"
+          * generadoEn (xs:dateTime) - optional
+    -->
+    <xs:complexType name="CrowdSenseProjectType">
+        <!-- TU CÓDIGO AQUÍ -->
+        <xs:sequence>
+            <xs:element name="metadata" type="cs:ProjectMetadataType"/>
+            <xs:element name="catalogoUbicaciones" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="ubicacion" type="cs:LocationFullType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="campanas">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="campana" type="cs:CampanaType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="estadisticas" type="cs:EstadisticasGlobalesType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- ========== TIPO COMPLEJO: ProjectMetadataType ========== -->
+    <!-- 
+        Información administrativa del proyecto.
+        
+        Elementos:
+          * id (cs:UuidType)
+          * nombre (xs:string)
+          * descripcion (xs:string) - minOccurs="0"
+          * responsable (cs:ResponsableType)
+          * fechaCreacion (xs:dateTime)
+          * fechaModificacion (xs:dateTime) - minOccurs="0"
+          * status (cs:ProjectStatusType)
+          * etiquetas - minOccurs="0", tipo complejo anónimo con:
+              - etiqueta (xs:string) minOccurs="0" maxOccurs="unbounded"
+    -->
+    <xs:complexType name="ProjectMetadataType">
+        <!-- TU CÓDIGO AQUÍ -->
+        <xs:sequence>
+            <xs:element name="id" type="cs:UuidType"/>
+            <xs:element name="nombre" type="xs:string"/>
+            <xs:element name="descripcion" type="xs:string" minOccurs="0"/>
+            <xs:element name="responsable" type="cs:ResponsableType"/>
+            <xs:element name="fechaCreacion" type="xs:dateTime"/>
+            <xs:element name="fechaModificacion" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="status" type="cs:ProjectStatusType"/>
+            <xs:element name="etiquetas" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="etiqueta" type="xs:string" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- ========== TIPO COMPLEJO: ResponsableType ========== -->
+    <!-- 
+        Información de contacto del responsable.
+        
+        Elementos:
+          * nombre (xs:string)
+          * email (cs:EmailType)
+          * departamento (xs:string) - minOccurs="0"
+          * telefono (xs:string) - minOccurs="0"
+    -->
+    <xs:complexType name="ResponsableType">
+        <!-- TU CÓDIGO AQUÍ -->
+        <xs:sequence>
+            <xs:element name="nombre" type="xs:string"/>
+            <xs:element name="email" type="cs:EmailType"/>
+            <xs:element name="departamento" type="xs:string" minOccurs="0"/>
+            <xs:element name="telefono" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- ========== TIPO COMPLEJO: CampanaType ========== -->
+    <!-- 
+        Representa una campaña de medición.
+        Una campaña agrupa sondas y tiene un periodo de tiempo.
+        
+        Elementos:
+          * nombre (xs:string)
+          * objetivo (xs:string) - minOccurs="0"
+          * fechaInicio (xs:dateTime)
+          * fechaFin (xs:dateTime) - minOccurs="0"
+          * sondas - Obligatorio, tipo complejo anónimo con:
+              - sonda (cs:SondaType) minOccurs="1" maxOccurs="unbounded"
+          * resumen (cs:ResumenCampanaType) - minOccurs="0"
+        
+        Atributos:
+          * id (cs:UuidType) - required
+          * activa (xs:boolean) - default="true"
+    -->
+    <xs:complexType name="CampanaType">
+        <!-- TU CÓDIGO AQUÍ -->
+        <xs:sequence>
+            <xs:element name="nombre" type="xs:string"/>
+            <xs:element name="objetivo" type="xs:string" minOccurs="0"/>
+            <xs:element name="fechaInicio" type="xs:dateTime"/>
+            <xs:element name="fechaFin" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="sondas">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="sonda" type="cs:SondaType" minOccurs="1" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="resumen" type="cs:ResumenCampanaType" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="cs:UuidType" use="required"/>
+        <xs:attribute name="activa" type="xs:boolean" default="true"/>
+    </xs:complexType>
+    
+
+    <!-- ========== TIPO COMPLEJO: ResumenCampanaType ========== -->
+    <!-- 
+        Estadísticas agregadas de una campaña.
+        
+        Elementos:
+          * totalProbes (xs:nonNegativeInteger)
+          * dispositivosUnicos (xs:nonNegativeInteger)
+          * rssiPromedio (xs:decimal)
+          * duracionHoras (xs:decimal) - minOccurs="0"
+          * probesPorHora (xs:decimal) - minOccurs="0"
+    -->
+    <xs:complexType name="ResumenCampanaType">
+        <!-- TU CÓDIGO AQUÍ -->
+        <xs:sequence>
+            <xs:element name="totalProbes" type="xs:nonNegativeInteger"/>
+            <xs:element name="dispositivosUnicos" type="xs:nonNegativeInteger"/>
+            <xs:element name="rssiPromedio" type="xs:decimal"/>
+            <xs:element name="duracionHoras" type="xs:decimal" minOccurs="0"/>
+            <xs:element name="probesPorHora" type="xs:decimal" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- ========== TIPO COMPLEJO: EstadisticasGlobalesType ========== -->
+    <!-- 
+        Estadísticas consolidadas de todo el proyecto.
+        
+        Elementos:
+          * totalCampanas (xs:nonNegativeInteger)
+          * totalSondas (xs:nonNegativeInteger)
+          * totalProbes (xs:nonNegativeInteger)
+          * dispositivosUnicosGlobal (xs:nonNegativeInteger)
+          * ultimaActualizacion (xs:dateTime)
+          * topDispositivos - minOccurs="0", tipo complejo anónimo con:
+              - dispositivo minOccurs="0" maxOccurs="100", tipo complejo anónimo con:
+                  * mac (cs:MacAddressType)
+                  * detecciones (xs:positiveInteger)
+                  * primeraDeteccion (xs:dateTime)
+                  * ultimaDeteccion (xs:dateTime)
+                  * ssidMasFrecuente (cs:SsidType) minOccurs="0"
+                  * Atributo rank (xs:positiveInteger)
+          * distribucionPorUbicacion - minOccurs="0", tipo complejo anónimo con:
+              - ubicacion minOccurs="0" maxOccurs="unbounded", tipo complejo anónimo con:
+                  * edificio (cs:EdificioType)
+                  * totalProbes (xs:nonNegativeInteger)
+                  * porcentaje (xs:decimal)
+    -->
+    <xs:complexType name="EstadisticasGlobalesType">
+        <!-- TU CÓDIGO AQUÍ -->
+        <xs:sequence>
+            <xs:element name="totalCampanas" type="xs:nonNegativeInteger"/>
+            <xs:element name="totalSondas" type="xs:nonNegativeInteger"/>
+            <xs:element name="totalProbes" type="xs:nonNegativeInteger"/>
+            <xs:element name="dispositivosUnicosGlobal" type="xs:nonNegativeInteger"/>
+            <xs:element name="ultimaActualizacion" type="xs:dateTime"/>
+            <xs:element name="topDispositivos" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="dispositivo" maxOccurs="100">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="mac" type="cs:MacAddressType"/>
+                                    <xs:element name="detecciones" type="xs:positiveInteger"/>
+                                    <xs:element name="primeraDeteccion" type="xs:dateTime"/>
+                                    <xs:element name="ultimaDeteccion" type="xs:dateTime"/>
+                                    <xs:element name="ssidMasFrecuente" type="cs:SsidType" minOccurs="0"/>
+                                </xs:sequence>
+                                <xs:attribute name="rank" type="xs:positiveInteger"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="distribucionPorUbicacion" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="ubicacion" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="edificio" type="cs:EdificioType"/>
+                                    <xs:element name="totalProbes" type="xs:nonNegativeInteger"/>
+                                    <xs:element name="porcentaje" type="xs:decimal"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

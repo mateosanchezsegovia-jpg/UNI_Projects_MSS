@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: Completar la cabecera del XML correctamente  -->
+<!-- Relacionar este XML con el Modelo de datos         -->
+<!-- ejercicio_location.xsd                              -->
+<cs:pruebaLocation
+    xmlns:cs="http://upm.es/piat/crowdsense"   
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://upm.es/piat/crowdsense ejercicio_location.xsd"><!-- -->
+
+    <!-- ================================================ -->
+    <!-- PARTE 1: Pruebas de LocationIDType (tipo base)   -->
+    <!-- ================================================ -->
+    
+    <!-- Ubicación válida: Laboratorio en Campus Norte -->
+    <cs:ubicacionBasica lat="40.4168" lon="-3.7038">
+        <cs:edificio>UPM-N-10</cs:edificio>
+        <cs:bloque>B1</cs:bloque>
+        <cs:planta>P0</cs:planta>
+        <cs:sala>L01</cs:sala>
+    </cs:ubicacionBasica>
+
+    <!-- Ubicación válida: Aula en sótano -->
+    <cs:ubicacionBasica>
+        <cs:edificio>UPM-S-5</cs:edificio>
+        <cs:bloque>B2</cs:bloque>
+        <cs:planta>P-1</cs:planta>
+        <cs:sala>A15</cs:sala>
+    </cs:ubicacionBasica>
+
+    <!-- ERROR: Edificio con formato incorrecto (falta UPM-) -->
+    <cs:ubicacionBasica>
+        <cs:edificio>N-10</cs:edificio>
+        <cs:bloque>B1</cs:bloque>
+        <cs:planta>P2</cs:planta>
+        <cs:sala>D05</cs:sala>
+    </cs:ubicacionBasica>
+
+    <!-- ERROR: Bloque sin prefijo B -->
+    <cs:ubicacionBasica>
+        <cs:edificio>UPM-N-10</cs:edificio>
+        <cs:bloque>3</cs:bloque>
+        <cs:planta>P1</cs:planta>
+        <cs:sala>O12</cs:sala>
+    </cs:ubicacionBasica>
+
+    <!-- ERROR: Planta sin prefijo P -->
+    <cs:ubicacionBasica>
+        <cs:edificio>UPM-N-10</cs:edificio>
+        <cs:bloque>B1</cs:bloque>
+        <cs:planta>2</cs:planta>
+        <cs:sala>H01</cs:sala>
+    </cs:ubicacionBasica>
+
+    <!-- ERROR: Sala con letra no válida (X no es válida) -->
+    <cs:ubicacionBasica>
+        <cs:edificio>UPM-N-10</cs:edificio>
+        <cs:bloque>B1</cs:bloque>
+        <cs:planta>P0</cs:planta>
+        <cs:sala>X99</cs:sala>
+    </cs:ubicacionBasica>
+
+    <!-- ERROR: Latitud fuera de rango (mayor que 90) -->
+    <cs:ubicacionBasica lat="95.0000" lon="-3.7038">
+        <cs:edificio>UPM-N-10</cs:edificio>
+        <cs:bloque>B1</cs:bloque>
+        <cs:planta>P0</cs:planta>
+        <cs:sala>L02</cs:sala>
+    </cs:ubicacionBasica>
+
+    <!-- ================================================ -->
+    <!-- PARTE 2: Pruebas de LocationFullType (herencia)  -->
+    <!-- ================================================ -->
+
+    <!-- Ubicación completa válida: Laboratorio equipado -->
+    <cs:ubicacionCompleta activo="true">
+        <cs:edificio>UPM-N-10</cs:edificio>
+        <cs:bloque>B1</cs:bloque>
+        <cs:planta>P0</cs:planta>
+        <cs:sala>L01</cs:sala>
+        <cs:descripcion>Laboratorio de Redes y Sistemas Distribuidos</cs:descripcion>
+        <cs:capacidad>30</cs:capacidad>
+        <cs:tipoEspacio>LABORATORIO</cs:tipoEspacio>
+        <cs:superficie>85.5</cs:superficie>
+        <cs:equipamiento>
+            <cs:item>Proyector</cs:item>
+            <cs:item>30 PCs</cs:item>
+            <cs:item>Pizarra digital</cs:item>
+        </cs:equipamiento>
+    </cs:ubicacionCompleta>
+
+    <!-- Ubicación completa válida: Aula sin equipamiento -->
+    <cs:ubicacionCompleta>
+        <cs:edificio>UPM-S-5</cs:edificio>
+        <cs:bloque>B2</cs:bloque>
+        <cs:planta>P1</cs:planta>
+        <cs:sala>A20</cs:sala>
+        <cs:descripcion>Aula Magna</cs:descripcion>
+        <cs:capacidad>200</cs:capacidad>
+        <cs:tipoEspacio>AULA</cs:tipoEspacio>
+    </cs:ubicacionCompleta>
+
+    <!-- ERROR: TipoEspacio no válido (minúsculas) -->
+    <cs:ubicacionCompleta>
+        <cs:edificio>UPM-N-10</cs:edificio>
+        <cs:bloque>B1</cs:bloque>
+        <cs:planta>P2</cs:planta>
+        <cs:sala>C01</cs:sala>
+        <cs:descripcion>Sala común de profesores</cs:descripcion>
+        <cs:tipoEspacio>sala_reuniones</cs:tipoEspacio>
+    </cs:ubicacionCompleta>
+
+    <!-- ERROR: Superficie negativa -->
+    <cs:ubicacionCompleta>
+        <cs:edificio>UPM-N-10</cs:edificio>
+        <cs:bloque>B1</cs:bloque>
+        <cs:planta>P0</cs:planta>
+        <cs:sala>D01</cs:sala>
+        <cs:descripcion>Despacho del coordinador</cs:descripcion>
+        <cs:superficie>-15.0</cs:superficie>
+    </cs:ubicacionCompleta>
+
+    <!-- ERROR: Capacidad cero (debe ser positiva) -->
+    <cs:ubicacionCompleta>
+        <cs:edificio>UPM-N-10</cs:edificio>
+        <cs:bloque>B1</cs:bloque>
+        <cs:planta>P0</cs:planta>
+        <cs:sala>S01</cs:sala>
+        <cs:descripcion>Cuarto de limpieza</cs:descripcion>
+        <cs:capacidad>0</cs:capacidad>
+        <cs:tipoEspacio>OTRO</cs:tipoEspacio>
+    </cs:ubicacionCompleta>
+
+</cs:pruebaLocation>

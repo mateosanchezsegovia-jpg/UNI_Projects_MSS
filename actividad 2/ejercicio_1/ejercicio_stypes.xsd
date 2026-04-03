@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:cs="http://upm.es/piat/crowdsense"
+           targetNamespace="http://upm.es/piat/crowdsense"
+           elementFormDefault="qualified">
+
+    <!-- ============================================ -->
+    <!-- TIPOS SIMPLES - COMPLETA ESTAS DEFINICIONES -->
+    <!-- ============================================ -->
+
+    <!-- 
+        MacAddressType: 
+        - Formato XX:XX:XX:XX:XX:XX 
+        - Cada XX son 2 caracteres hexadecimales (0-9, A-F, a-f)
+        - Usa xs:pattern
+    -->
+    <xs:simpleType name="MacAddressType">
+        <!-- TU CÓDIGO AQUÍ -->
+         <xs:restriction base="xs:string">
+            <xs:pattern value="([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- 
+        RssiType: 
+        - Intensidad de señal WiFi en dBm
+        - Rango válido: -100 a 0
+        - Tipo base: xs:int
+        - Usa xs:minInclusive y xs:maxInclusive
+    -->
+    <xs:simpleType name="RssiType">
+        <!-- TU CÓDIGO AQUÍ -->
+         <xs:restriction base="xs:int">
+            <xs:minInclusive value="-100"/>
+            <xs:maxInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- 
+        SsidType: 
+        - Nombre de red WiFi
+        - Longitud máxima: 32 caracteres (estándar IEEE 802.11)
+        - PUEDE estar vacío (redes ocultas)
+        - Usa xs:maxLength
+    -->
+    <xs:simpleType name="SsidType">
+        <!-- TU CÓDIGO AQUÍ -->
+         <xs:restriction base="xs:string">
+            <xs:maxLength value="32"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- 
+        SondaStatusType: 
+        - Estado operativo de una sonda
+        - Valores permitidos (en mayúsculas): ACTIVE, INACTIVE, MAINTENANCE, ERROR
+        - Usa xs:enumeration
+    -->
+    <xs:simpleType name="SondaStatusType">
+        <!-- TU CÓDIGO AQUÍ -->
+         <xs:restriction base="xs:string">
+            <xs:enumeration value="ACTIVE"/>
+            <xs:enumeration value="INACTIVE"/>
+            <xs:enumeration value="MAINTENANCE"/>
+            <xs:enumeration value="ERROR"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- ============================================ -->
+    <!-- ESTRUCTURA DEL DOCUMENTO (YA COMPLETADA)    -->
+    <!-- ============================================ -->
+
+    <xs:element name="pruebaTipos">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="direccionesMac">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="mac" type="cs:MacAddressType" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="señales">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="rssi" type="cs:RssiType" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="redesWifi">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="ssid" type="cs:SsidType" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="estadosSonda">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="estado" type="cs:SondaStatusType" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

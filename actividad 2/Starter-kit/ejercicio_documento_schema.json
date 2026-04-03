@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://upm.es/piat/crowdsense/documento/v1/schema",
+  "title": "CrowdSense Document Schema",
+  "description": "Esquema de documento JSON para persistencia NoSQL e integración con herramientas",
+  "type": "object",
+
+  "$comment": "============================================",
+  "$comment": "EJERCICIO 5: JSON Schema para Documentos",
+  "$comment": "Modelo para bases de datos NoSQL y MCPs",
+  "$comment": "============================================",
+
+  "$defs": {
+    
+    "$comment": "========== TIPOS BÁSICOS (Equivalentes a simpleType en XSD) ==========",
+
+    "UuidType": {
+      "$comment": "TODO: Definir patrón UUID v4",
+      "$comment": "Formato: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "$comment": "Usar: type string + pattern"
+    },
+
+    "MacAddressType": {
+      "$comment": "TODO: Definir patrón MAC address",
+      "$comment": "Formato: XX:XX:XX:XX:XX:XX (hexadecimal con separadores)",
+      "$comment": "Usar: type string + pattern"
+    },
+
+    "RssiType": {
+      "$comment": "TODO: Definir rango RSSI",
+      "$comment": "Rango: -100 a 0 dBm",
+      "$comment": "Usar: type integer + minimum + maximum"
+    },
+
+    "SsidType": {
+      "$comment": "TODO: Definir SSID",
+      "$comment": "Máximo 32 caracteres",
+      "$comment": "Usar: type string + maxLength"
+    },
+
+    "SondaStatusType": {
+      "$comment": "TODO: Definir enumeración de estados de sonda",
+      "$comment": "Valores: ACTIVE, INACTIVE, MAINTENANCE, ERROR",
+      "$comment": "Usar: type string + enum"
+    },
+
+    "ProjectStatusType": {
+      "$comment": "TODO: Definir enumeración de estados de proyecto",
+      "$comment": "Valores: PLANNED, IN_PROGRESS, COMPLETED, CANCELLED",
+      "$comment": "Usar: type string + enum"
+    },
+
+    "IntervaloCapturaType": {
+      "$comment": "TODO: Definir rango de intervalo de captura",
+      "$comment": "Rango: 10 a 60000 ms",
+      "$comment": "Usar: type integer + minimum + maximum"
+    },
+
+    "CanalWifiType": {
+      "$comment": "TODO: Definir rango de canales WiFi",
+      "$comment": "Rango: 1 a 165",
+      "$comment": "Usar: type integer + minimum + maximum"
+    },
+
+    "FrecuenciaWifiType": {
+      "$comment": "TODO: Definir enumeración de frecuencias",
+      "$comment": "Valores: 2.4GHz, 5GHz, 6GHz",
+      "$comment": "Usar: type string + enum"
+    },
+
+    "TipoTramaType": {
+      "$comment": "TODO: Definir enumeración de tipos de trama",
+      "$comment": "Valores: PROBE_REQUEST, PROBE_RESPONSE, BEACON, DATA, OTHER",
+      "$comment": "Usar: type string + enum"
+    },
+
+    "ModoCapturaType": {
+      "$comment": "TODO: Definir enumeración de modos de captura",
+      "$comment": "Valores: CONTINUO, PROGRAMADO, BAJO_DEMANDA",
+      "$comment": "Usar: type string + enum"
+    },
+
+    "$comment": "========== TIPOS COMPLEJOS ==========",
+
+    "CoordenadasType": {
+      "$comment": "TODO: Definir coordenadas GPS",
+      "$comment": "Propiedades: lat (-90 a 90), lon (-180 a 180)",
+      "$comment": "Usar: type object + properties + required"
+    },
+
+    "UbicacionType": {
+      "$comment": "TODO: Definir ubicación jerárquica",
+      "$comment": "Propiedades obligatorias: edificio, bloque, planta, sala",
+      "$comment": "Propiedad opcional: coordenadas (CoordenadasType)",
+      "$comment": "Usar: type object + properties + required + $ref"
+    },
+
+    "ResponsableType": {
+      "$comment": "TODO: Definir información del responsable",
+      "$comment": "Propiedades obligatorias: nombre, email",
+      "$comment": "Propiedades opcionales: departamento, telefono",
+      "$comment": "Validar email con format: email"
+    },
+
+    "ConfiguracionSondaType": {
+      "$comment": "TODO: Definir configuración de sonda",
+      "$comment": "Propiedades: intervaloCaptura, rssiMinimo, canales (array), modoCaptura",
+      "$comment": "Solo canales es obligatorio (minItems: 1)",
+      "$comment": "Usar valores default donde aplique"
+    },
+
+    "SondaType": {
+      "$comment": "TODO: Definir modelo de sonda",
+      "$comment": "Propiedades obligatorias: id, nombre, status, ubicacion, macSonda",
+      "$comment": "Propiedades opcionales: descripcion, configuracion, ultimoContacto",
+      "$comment": "Usar $ref para tipos reutilizables"
+    },
+
+    "ProbeType": {
+      "$comment": "TODO: Definir modelo de probe (detección WiFi)",
+      "$comment": "Propiedades obligatorias: id, sondaRef, timestamp, ubicacion, rssi, macAddress, ssid",
+      "$comment": "Propiedades opcionales: canal, frecuencia, tipoTrama, fabricante",
+      "$comment": "timestamp debe usar format: date-time"
+    },
+
+    "ProyectoMetadataType": {
+      "$comment": "TODO: Definir metadatos del proyecto",
+      "$comment": "Propiedades obligatorias: id, nombre, responsable, fechaCreacion, status",
+      "$comment": "Propiedades opcionales: descripcion, etiquetas (array de strings)"
+    },
+
+    "EstadisticasType": {
+      "$comment": "TODO: Definir estadísticas globales",
+      "$comment": "Propiedades: totalSondas, totalProbes, dispositivosUnicos,",
+      "$comment": "             rssiPromedio, ultimaActualizacion, probesPorHora"
+    }
+  },
+
+  "$comment": "========== ESTRUCTURA PRINCIPAL DEL DOCUMENTO ==========",
+  
+  "properties": {
+    "proyecto": {
+      "$comment": "TODO: Referenciar ProyectoMetadataType"
+    },
+    "sondas": {
+      "$comment": "TODO: Array de SondaType, mínimo 1 elemento"
+    },
+    "probes": {
+      "$comment": "TODO: Array de ProbeType, puede estar vacío"
+    },
+    "estadisticas": {
+      "$comment": "TODO: Referenciar EstadisticasType (opcional)"
+    }
+  },
+
+  "required": ["proyecto", "sondas"],
+  "additionalProperties": false
+}

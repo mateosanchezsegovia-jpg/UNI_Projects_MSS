@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: Completar la cabecera del XML correctamente  -->
+<!-- Relacionar este XML con el Modelo de datos         -->
+<!-- ejercicio_probesonda.xsd                           -->
+<cs:pruebaProbesSondas xmlns:cs="http://upm.es/piat/crowdsense"   
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://upm.es/piat/crowdsense ejercicio_probesonda.xsd"><!-- -->
+
+    <!-- ================================================ -->
+    <!-- PARTE 1: Pruebas de WifiProbeType                -->
+    <!-- Modelo de dato individual con referencia ligera  -->
+    <!-- ================================================ -->
+    
+    <!-- Probe válido: detección completa -->
+    <cs:probe id="11111111-1111-1111-1111-111111111111" 
+              sondaRef="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+              secuencia="1">
+        <cs:timestamp>2025-01-18T14:30:00Z</cs:timestamp>
+        <cs:location>
+            <cs:edificio>UPM-N-10</cs:edificio>
+            <cs:bloque>B1</cs:bloque>
+            <cs:planta>P0</cs:planta>
+            <cs:sala>L01</cs:sala>
+        </cs:location>
+        <cs:rssi>-45</cs:rssi>
+        <cs:macAddress>AA:BB:CC:DD:EE:01</cs:macAddress>
+        <cs:ssid>eduroam</cs:ssid>
+        <cs:canal>6</cs:canal>
+        <cs:frecuencia>2.4GHz</cs:frecuencia>
+        <cs:tipoTrama>PROBE_REQUEST</cs:tipoTrama>
+        <cs:fabricante>Apple</cs:fabricante>
+    </cs:probe>
+
+    <!-- Probe válido: solo campos obligatorios -->
+    <cs:probe id="22222222-2222-2222-2222-222222222222" 
+              sondaRef="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa">
+        <cs:timestamp>2025-01-18T14:30:05Z</cs:timestamp>
+        <cs:location>
+            <cs:edificio>UPM-N-10</cs:edificio>
+            <cs:bloque>B1</cs:bloque>
+            <cs:planta>P0</cs:planta>
+            <cs:sala>L01</cs:sala>
+        </cs:location>
+        <cs:rssi>-67</cs:rssi>
+        <cs:macAddress>AA:BB:CC:DD:EE:02</cs:macAddress>
+        <cs:ssid></cs:ssid>
+    </cs:probe>
+
+    <!-- ERROR: Falta atributo sondaRef (obligatorio) -->
+    <cs:probe id="33333333-3333-3333-3333-333333333333">
+        <cs:timestamp>2025-01-18T14:30:10Z</cs:timestamp>
+        <cs:location>
+            <cs:edificio>UPM-N-10</cs:edificio>
+            <cs:bloque>B1</cs:bloque>
+            <cs:planta>P0</cs:planta>
+            <cs:sala>L01</cs:sala>
+        </cs:location>
+        <cs:rssi>-55</cs:rssi>
+        <cs:macAddress>AA:BB:CC:DD:EE:03</cs:macAddress>
+        <cs:ssid>eduroam</cs:ssid>
+    </cs:probe>
+
+    <!-- ERROR: UUID mal formado en id -->
+    <cs:probe id="not-a-valid-uuid" 
+              sondaRef="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa">
+        <cs:timestamp>2025-01-18T14:30:15Z</cs:timestamp>
+        <cs:location>
+            <cs:edificio>UPM-N-10</cs:edificio>
+            <cs:bloque>B1</cs:bloque>
+            <cs:planta>P0</cs:planta>
+            <cs:sala>L01</cs:sala>
+        </cs:location>
+        <cs:rssi>-60</cs:rssi>
+        <cs:macAddress>AA:BB:CC:DD:EE:04</cs:macAddress>
+        <cs:ssid>eduroam</cs:ssid>
+    </cs:probe>
+
+    <!-- ERROR: RSSI fuera de rango (positivo) -->
+    <cs:probe id="44444444-4444-4444-4444-444444444444" 
+              sondaRef="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa">
+        <cs:timestamp>2025-01-18T14:30:20Z</cs:timestamp>
+        <cs:location>
+            <cs:edificio>UPM-N-10</cs:edificio>
+            <cs:bloque>B1</cs:bloque>
+            <cs:planta>P0</cs:planta>
+            <cs:sala>L01</cs:sala>
+        </cs:location>
+        <cs:rssi>15</cs:rssi>
+        <cs:macAddress>AA:BB:CC:DD:EE:05</cs:macAddress>
+        <cs:ssid>eduroam</cs:ssid>
+    </cs:probe>
+
+    <!-- ERROR: tipoTrama no válido -->
+    <cs:probe id="55555555-5555-5555-5555-555555555555" 
+              sondaRef="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa">
+        <cs:timestamp>2025-01-18T14:30:25Z</cs:timestamp>
+        <cs:location>
+            <cs:edificio>UPM-N-10</cs:edificio>
+            <cs:bloque>B1</cs:bloque>
+            <cs:planta>P0</cs:planta>
+            <cs:sala>L01</cs:sala>
+        </cs:location>
+        <cs:rssi>-70</cs:rssi>
+        <cs:macAddress>AA:BB:CC:DD:EE:06</cs:macAddress>
+        <cs:ssid>eduroam</cs:ssid>
+        <cs:tipoTrama>UNKNOWN_FRAME</cs:tipoTrama>
+    </cs:probe>
+
+    <!-- ================================================ -->
+    <!-- PARTE 2: Pruebas de WifiProbesBatchType          -->
+    <!-- Agrupación eficiente de probes                   -->
+    <!-- ================================================ -->
+
+    <!-- Lote válido con múltiples probes -->
+    <cs:lote batchId="batch001-0001-0001-0001-000000000001"
+             batchTimestamp="2025-01-18T14:35:00Z"
+             totalProbes="2"
+             sondaOrigen="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa">
+        <cs:probe id="66666666-6666-6666-6666-666666666666" 
+                  sondaRef="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa">
+            <cs:timestamp>2025-01-18T14:35:01Z</cs:timestamp>
+            <cs:location>
+                <cs:edificio>UPM-N-10</cs:edificio>
+                <cs:bloque>B1</cs:bloque>
+                <cs:planta>P0</cs:planta>
+                <cs:sala>L01</cs:sala>
+            </cs:location>
+            <cs:rssi>-50</cs:rssi>
+            <cs:macAddress>AA:BB:CC:DD:EE:07</cs:macAddress>
+            <cs:ssid>eduroam</cs:ssid>
+        </cs:probe>
+        <cs:probe id="77777777-7777-7777-7777-777777777777" 
+                  sondaRef="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa">
+            <cs:timestamp>2025-01-18T14:35:02Z</cs:timestamp>
+            <cs:location>
+                <cs:edificio>UPM-N-10</cs:edificio>
+                <cs:bloque>B1</cs:bloque>
+                <cs:planta>P0</cs:planta>
+                <cs:sala>L01</cs:sala>
+            </cs:location>
+            <cs:rssi>-55</cs:rssi>
+            <cs:macAddress>AA:BB:CC:DD:EE:08</cs:macAddress>
+            <cs:ssid>WiFi-UPM</cs:ssid>
+        </cs:probe>
+    </cs:lote>
+
+    <!-- ERROR: Lote sin probes (minOccurs="1") -->
+    <cs:lote batchId="batch002-0002-0002-0002-000000000002"
+             batchTimestamp="2025-01-18T14:40:00Z"
+             totalProbes="0">
+    </cs:lote>
+
+    <!-- ERROR: totalProbes no coincide con cantidad real -->
+    <cs:lote batchId="batch003-0003-0003-0003-000000000003"
+             batchTimestamp="2025-01-18T14:45:00Z"
+             totalProbes="5">
+        <cs:probe id="88888888-8888-8888-8888-888888888888" 
+                  sondaRef="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa">
+            <cs:timestamp>2025-01-18T14:45:01Z</cs:timestamp>
+            <cs:location>
+                <cs:edificio>UPM-N-10</cs:edificio>
+                <cs:bloque>B1</cs:bloque>
+                <cs:planta>P0</cs:planta>
+                <cs:sala>L01</cs:sala>
+            </cs:location>
+            <cs:rssi>-65</cs:rssi>
+            <cs:macAddress>AA:BB:CC:DD:EE:09</cs:macAddress>
+            <cs:ssid>eduroam</cs:ssid>
+        </cs:probe>
+    </cs:lote>
+
+    <!-- ================================================ -->
+    <!-- PARTE 3: Pruebas de SondaConfigType              -->
+    <!-- Configuración operativa de la sonda              -->
+    <!-- ================================================ -->
+
+    <!-- Configuración válida -->
+    <cs:configuracion>
+        <cs:intervaloCaptura>1000</cs:intervaloCaptura>
+        <cs:rssiMinimo>-85</cs:rssiMinimo>
+        <cs:canalesMonitorizados>
+            <cs:canal>1</cs:canal>
+            <cs:canal>6</cs:canal>
+            <cs:canal>11</cs:canal>
+        </cs:canalesMonitorizados>
+        <cs:modoCaptura>CONTINUO</cs:modoCaptura>
+        <cs:tamanoLote>100</cs:tamanoLote>
+    </cs:configuracion>
+
+    <!-- ERROR: intervaloCaptura fuera de rango (demasiado bajo) -->
+    <cs:configuracion>
+        <cs:intervaloCaptura>5</cs:intervaloCaptura>
+        <cs:rssiMinimo>-80</cs:rssiMinimo>
+        <cs:canalesMonitorizados>
+            <cs:canal>1</cs:canal>
+        </cs:canalesMonitorizados>
+    </cs:configuracion>
+
+    <!-- ERROR: canal WiFi fuera de rango -->
+    <cs:configuracion>
+        <cs:intervaloCaptura>500</cs:intervaloCaptura>
+        <cs:rssiMinimo>-75</cs:rssiMinimo>
+        <cs:canalesMonitorizados>
+            <cs:canal>200</cs:canal>
+        </cs:canalesMonitorizados>
+    </cs:configuracion>
+
+    <!-- ERROR: modoCaptura no válido -->
+    <cs:configuracion>
+        <cs:intervaloCaptura>2000</cs:intervaloCaptura>
+        <cs:rssiMinimo>-90</cs:rssiMinimo>
+        <cs:canalesMonitorizados>
+            <cs:canal>6</cs:canal>
+        </cs:canalesMonitorizados>
+        <cs:modoCaptura>AUTOMATICO</cs:modoCaptura>
+    </cs:configuracion>
+
+</cs:pruebaProbesSondas>

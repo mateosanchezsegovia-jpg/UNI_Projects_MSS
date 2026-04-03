@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: Completar la cabecera del XML correctamente  -->
+<!-- Relacionar este XML con el Modelo de datos         -->
+<!-- ejercicio_project.xsd                               -->
+<cs:crowdSenseProject xmlns:cs="http://upm.es/piat/crowdsense"   
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://upm.es/piat/crowdsense ejercicio_project.xsd">
+
+    <!-- ================================================ -->
+    <!-- PARTE 1: Metadatos del Proyecto                  -->
+    <!-- ================================================ -->
+    
+    <cs:metadata>
+        <cs:id>550e8400-e29b-41d4-a716-446655440000</cs:id>
+        <cs:nombre>Proyecto de Prueba CrowdSense</cs:nombre>
+        <cs:descripcion>Proyecto para validar el esquema XSD del ejercicio 4</cs:descripcion>
+        <cs:responsable>
+            <cs:nombre>Dr. García López</cs:nombre>
+            <cs:email>garcia.lopez@upm.es</cs:email>
+            <cs:departamento>PIAT</cs:departamento>
+        </cs:responsable>
+        <cs:fechaCreacion>2025-01-10T09:00:00Z</cs:fechaCreacion>
+        <cs:status>IN_PROGRESS</cs:status>
+        <cs:etiquetas>
+            <cs:etiqueta>test</cs:etiqueta>
+            <cs:etiqueta>ejercicio4</cs:etiqueta>
+        </cs:etiquetas>
+    </cs:metadata>
+
+    <!-- ================================================ -->
+    <!-- PARTE 2: Catálogo de Ubicaciones (opcional)      -->
+    <!-- ================================================ -->
+    
+    <cs:catalogoUbicaciones>
+        <cs:ubicacion lat="40.389722" lon="-3.628889" activo="true">
+            <cs:edificio>UPM-N-10</cs:edificio>
+            <cs:bloque>B1</cs:bloque>
+            <cs:planta>P0</cs:planta>
+            <cs:sala>L01</cs:sala>
+            <cs:descripcion>Laboratorio Principal</cs:descripcion>
+            <cs:capacidad>30</cs:capacidad>
+            <cs:tipoEspacio>LABORATORIO</cs:tipoEspacio>
+        </cs:ubicacion>
+    </cs:catalogoUbicaciones>
+
+    <!-- ================================================ -->
+    <!-- PARTE 3: Campañas de Medición                    -->
+    <!-- Aquí es donde se incluyen las Sondas y Probes    -->
+    <!-- ================================================ -->
+    
+    <cs:campanas>
+    
+        <!-- CAMPAÑA 1: Válida con integridad referencial correcta -->
+        <cs:campana id="campana01-0001-0001-0001-000000000001" activa="true">
+            <cs:nombre>Campaña de Prueba Enero</cs:nombre>
+            <cs:objetivo>Validar el funcionamiento del esquema</cs:objetivo>
+            <cs:fechaInicio>2025-01-20T08:00:00Z</cs:fechaInicio>
+            <cs:fechaFin>2025-01-31T22:00:00Z</cs:fechaFin>
+            
+            <cs:sondas>
+                <!-- Sonda válida con probes que la referencian correctamente -->
+                <cs:sonda id="sonda001-0001-0001-0001-000000000001" status="ACTIVE">
+                    <cs:nombre>Sonda-Lab-01</cs:nombre>
+                    <cs:descripcion>Sonda principal del laboratorio</cs:descripcion>
+                    <cs:ubicacionFija activo="true">
+                        <cs:edificio>UPM-N-10</cs:edificio>
+                        <cs:bloque>B1</cs:bloque>
+                        <cs:planta>P0</cs:planta>
+                        <cs:sala>L01</cs:sala>
+                        <cs:tipoEspacio>LABORATORIO</cs:tipoEspacio>
+                    </cs:ubicacionFija>
+                    <cs:macSonda>AA:BB:CC:DD:EE:01</cs:macSonda>
+                    <cs:fechaInstalacion>2025-01-15</cs:fechaInstalacion>
+                    <cs:ultimoContacto>2025-01-25T17:30:00Z</cs:ultimoContacto>
+                    
+                    <cs:configuracion>
+                        <cs:intervaloCaptura>500</cs:intervaloCaptura>
+                        <cs:rssiMinimo>-85</cs:rssiMinimo>
+                        <cs:canalesMonitorizados>
+                            <cs:canal>1</cs:canal>
+                            <cs:canal>6</cs:canal>
+                            <cs:canal>11</cs:canal>
+                        </cs:canalesMonitorizados>
+                        <cs:modoCaptura>CONTINUO</cs:modoCaptura>
+                    </cs:configuracion>
+                    
+                    <cs:probes totalCount="3">
+                        <!-- Probe que referencia correctamente a sonda001 -->
+                        <cs:probe id="probe001-0001-0001-0001-000000000001" 
+                                  sondaRef="sonda001-0001-0001-0001-000000000001">
+                            <cs:timestamp>2025-01-25T09:15:30Z</cs:timestamp>
+                            <cs:location>
+                                <cs:edificio>UPM-N-10</cs:edificio>
+                                <cs:bloque>B1</cs:bloque>
+                                <cs:planta>P0</cs:planta>
+                                <cs:sala>L01</cs:sala>
+                            </cs:location>
+                            <cs:rssi>-65</cs:rssi>
+                            <cs:macAddress>11:22:33:44:55:66</cs:macAddress>
+                            <cs:ssid>eduroam</cs:ssid>
+                        </cs:probe>
+                        
+                        <!-- Probe válido -->
+                        <cs:probe id="probe002-0002-0002-0002-000000000002" 
+                                  sondaRef="sonda001-0001-0001-0001-000000000001">
+                            <cs:timestamp>2025-01-25T09:16:00Z</cs:timestamp>
+                            <cs:location>
+                                <cs:edificio>UPM-N-10</cs:edificio>
+                                <cs:bloque>B1</cs:bloque>
+                                <cs:planta>P0</cs:planta>
+                                <cs:sala>L01</cs:sala>
+                            </cs:location>
+                            <cs:rssi>-58</cs:rssi>
+                            <cs:macAddress>AA:BB:CC:DD:EE:FF</cs:macAddress>
+                            <cs:ssid>UPM-WiFi</cs:ssid>
+                        </cs:probe>
+                        
+                        <!-- ERROR INTEGRIDAD: Probe que referencia sonda INEXISTENTE -->
+                        <cs:probe id="probe003-0003-0003-0003-000000000003" 
+                                  sondaRef="sonda999-9999-9999-9999-999999999999">
+                            <cs:timestamp>2025-01-25T09:17:00Z</cs:timestamp>
+                            <cs:location>
+                                <cs:edificio>UPM-N-10</cs:edificio>
+                                <cs:bloque>B1</cs:bloque>
+                                <cs:planta>P0</cs:planta>
+                                <cs:sala>L01</cs:sala>
+                            </cs:location>
+                            <cs:rssi>-70</cs:rssi>
+                            <cs:macAddress>DE:AD:BE:EF:CA:FE</cs:macAddress>
+                            <cs:ssid>eduroam</cs:ssid>
+                        </cs:probe>
+                    </cs:probes>
+                </cs:sonda>
+                
+                <!-- Segunda sonda para probar unicidad -->
+                <cs:sonda id="sonda002-0002-0002-0002-000000000002" status="ACTIVE">
+                    <cs:nombre>Sonda-Hall-01</cs:nombre>
+                    <cs:ubicacionFija activo="true">
+                        <cs:edificio>UPM-N-10</cs:edificio>
+                        <cs:bloque>B1</cs:bloque>
+                        <cs:planta>P0</cs:planta>
+                        <cs:sala>H01</cs:sala>
+                        <cs:tipoEspacio>HALL</cs:tipoEspacio>
+                    </cs:ubicacionFija>
+                    <cs:macSonda>AA:BB:CC:DD:EE:02</cs:macSonda>
+                    <cs:fechaInstalacion>2025-01-15</cs:fechaInstalacion>
+                    
+                    <cs:configuracion>
+                        <cs:intervaloCaptura>1000</cs:intervaloCaptura>
+                        <cs:rssiMinimo>-90</cs:rssiMinimo>
+                        <cs:canalesMonitorizados>
+                            <cs:canal>6</cs:canal>
+                        </cs:canalesMonitorizados>
+                    </cs:configuracion>
+                </cs:sonda>
+            </cs:sondas>
+            
+            <cs:resumen>
+                <cs:totalProbes>3</cs:totalProbes>
+                <cs:dispositivosUnicos>3</cs:dispositivosUnicos>
+                <cs:rssiPromedio>-64.3</cs:rssiPromedio>
+            </cs:resumen>
+        </cs:campana>
+
+        <!-- CAMPAÑA 2: ERROR - ID de campaña duplicado -->
+        <cs:campana id="campana01-0001-0001-0001-000000000001" activa="false">
+            <cs:nombre>Campaña Duplicada (ERROR)</cs:nombre>
+            <cs:fechaInicio>2025-02-01T08:00:00Z</cs:fechaInicio>
+            
+            <cs:sondas>
+                <cs:sonda id="sonda003-0003-0003-0003-000000000003" status="INACTIVE">
+                    <cs:nombre>Sonda-Test</cs:nombre>
+                    <cs:ubicacionFija activo="true">
+                        <cs:edificio>UPM-S-5</cs:edificio>
+                        <cs:bloque>B1</cs:bloque>
+                        <cs:planta>P1</cs:planta>
+                        <cs:sala>A01</cs:sala>
+                    </cs:ubicacionFija>
+                    <cs:macSonda>AA:BB:CC:DD:EE:03</cs:macSonda>
+                    <cs:fechaInstalacion>2025-02-01</cs:fechaInstalacion>
+                </cs:sonda>
+            </cs:sondas>
+        </cs:campana>
+        
+    </cs:campanas>
+
+    <!-- ================================================ -->
+    <!-- PARTE 4: Estadísticas Globales (opcional)        -->
+    <!-- ================================================ -->
+    
+    <cs:estadisticas>
+        <cs:totalCampanas>2</cs:totalCampanas>
+        <cs:totalSondas>3</cs:totalSondas>
+        <cs:totalProbes>3</cs:totalProbes>
+        <cs:dispositivosUnicosGlobal>3</cs:dispositivosUnicosGlobal>
+        <cs:ultimaActualizacion>2025-01-25T18:00:00Z</cs:ultimaActualizacion>
+        
+        <cs:topDispositivos>
+            <cs:dispositivo rank="1">
+                <cs:mac>11:22:33:44:55:66</cs:mac>
+                <cs:detecciones>1</cs:detecciones>
+                <cs:primeraDeteccion>2025-01-25T09:15:30Z</cs:primeraDeteccion>
+                <cs:ultimaDeteccion>2025-01-25T09:15:30Z</cs:ultimaDeteccion>
+                <cs:ssidMasFrecuente>eduroam</cs:ssidMasFrecuente>
+            </cs:dispositivo>
+        </cs:topDispositivos>
+    </cs:estadisticas>
+
+</cs:crowdSenseProject>
