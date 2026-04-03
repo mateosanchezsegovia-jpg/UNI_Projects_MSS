@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes>
+    <vType id="auto_CACC" 
+           accel="2.5" 
+           decel="6.0" 
+           sigma="0.0" 
+           length="5" 
+           minGap="2.5"
+           maxSpeed="13.89" 
+           carFollowModel="CC" 
+           lanesCount="1"
+           tau="0.5"/> 
+
+    <route id="izq_a_der" edges="E0 E2"/>
+    <route id="der_a_izq" edges="-E2 -E0"/>
+    <route id="arr_a_aba" edges="-E1 -E3"/>
+    <route id="aba_a_arr" edges="E3 E1"/>
+
+    <flow id="f1" type="auto_CACC" route="izq_a_der" begin="0" end="100000" vehsPerHour="800" departLane="best" departSpeed="max"/>
+    <flow id="f2" type="auto_CACC" route="der_a_izq" begin="0" end="100000" vehsPerHour="400" departLane="best" departSpeed="max"/>
+    <flow id="f3" type="auto_CACC" route="arr_a_aba" begin="0" end="100000" vehsPerHour="300" departLane="best" departSpeed="max"/>
+    <flow id="f4" type="auto_CACC" route="aba_a_arr" begin="0" end="100000" vehsPerHour="150" departLane="best" departSpeed="max"/>
+</routes>

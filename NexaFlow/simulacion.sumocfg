@@ -1,0 +1,6 @@
+<configuration>
+    <input>
+        <net-file value="cruce.net.xml"/>
+        <route-files value="rutas.rou.xml"/>
+    </input>
+</configuration>

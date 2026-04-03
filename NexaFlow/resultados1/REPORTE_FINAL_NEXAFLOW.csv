@@ -1,0 +1,4 @@
+Configuración,Vel. Media (km/h),CO2 Total (mg),Peligro (TTC < 3s),Fluidez (%)
+Baseline_Fijo,30.14,34153422.0,718,96.6
+agente_nexaflow_v2_1,30.12,34176748.0,719,96.6
+agente_nexaflow_v2_2,27.48,31797766.0,824,100.0

@@ -1,0 +1,7 @@
+traci
+gymnasium
+stable-baselines3
+numpy
+pandas
+pyzmq
+tabulate
